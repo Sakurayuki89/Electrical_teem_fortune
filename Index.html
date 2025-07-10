@@ -13,7 +13,7 @@
     <style>
         body {
             margin: 0;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
         }
     </style>
 </head>
@@ -21,7 +21,7 @@
     <div id="root"></div>
 
     <script type="text/babel">
-        const { useState, useRef } = React;
+        const { useState } = React;
 
         // 아이콘 컴포넌트들
         const Star = ({ className = "w-4 h-4" }) => (
@@ -56,14 +56,9 @@
 
         const MBTIFortuneApp = () => {
             const [mbti, setMbti] = useState('');
-            const [birthYear, setBirthYear] = useState('');
-            const [birthMonth, setBirthMonth] = useState('');
-            const [birthDay, setBirthDay] = useState('');
+            const [zodiacAnimalSelection, setZodiacAnimalSelection] = useState(''); // 12지신 띠 선택 상태
             const [result, setResult] = useState(null);
             const [loading, setLoading] = useState(false);
-
-            const monthRef = useRef(null);
-            const dayRef = useRef(null);
 
             const mbtiTypes = [
                 'INTJ', 'INTP', 'ENTJ', 'ENTP',
@@ -72,12 +67,7 @@
                 'ISTP', 'ISFP', 'ESTP', 'ESFP'
             ];
 
-            // 12지신 계산 함수
-            const getZodiacAnimal = (year) => {
-                const fullYear = parseInt(year) <= 25 ? 2000 + parseInt(year) : 1900 + parseInt(year);
-                const animals = ['원숭이', '닭', '개', '돼지', '쥐', '소', '호랑이', '토끼', '용', '뱀', '말', '양'];
-                return animals[fullYear % 12];
-            };
+            const zodiacAnimals = ['쥐', '소', '호랑이', '토끼', '용', '뱀', '말', '양', '원숭이', '닭', '개', '돼지'];
 
             // 오늘의 변화 코드 (매일 다른 운세를 위함)
             const getTodayVariation = () => {
@@ -119,7 +109,7 @@
                 ],
                 '호랑이': [
                     '용기와 결단력이 필요한 상황이 찾아올 것입니다. 자신감을 가지고 도전하면 좋은 결과를 얻을 수 있습니다. 리더십을 발휘해보세요.',
-                    '강인한 추진력으로 어려운 일도 해낼 수 있는 날입니다. 하지만 독단적이지 않도록 주의하고 팀워크를 중시하세요.',
+                    '강인한 추진력으로 어려운 일도 해내지만, 독단적이지 않도록 주의하고 팀워크를 중시하세요.',
                     '도전 정신이 강해지는 하루입니다. 새로운 분야에 도전해보거나 기존의 방식을 개선해보는 것이 좋겠습니다.'
                 ],
                 '토끼': [
@@ -233,13 +223,12 @@
                 ]
             };
 
-            const generateLuckyNumbers = (mbtiType, year, month, day) => {
+            // 행운번호 생성 함수 (MBTI와 현재 날짜를 기반으로)
+            const generateLuckyNumbers = (mbtiType) => {
                 const mbtiValue = mbtiType.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
-                const fullYear = parseInt(year) <= 25 ? 2000 + parseInt(year) : 1900 + parseInt(year);
-                const dateValue = new Date(fullYear, parseInt(month) - 1, parseInt(day)).getTime();
-                const today = new Date().getDate();
-                
-                const seed = (mbtiValue + dateValue + today) % 1000000;
+                const today = new Date().getDate(); // 오늘의 일자를 시드로 사용
+
+                const seed = (mbtiValue + today) % 1000000;
                 
                 let available = [];
                 for (let i = 1; i <= 45; i++) {
@@ -259,44 +248,11 @@
                 return selected.sort((a, b) => a - b);
             };
 
-            const handleYearChange = (e) => {
-                const value = e.target.value.replace(/\D/g, '').slice(0, 2);
-                setBirthYear(value);
-                if (value.length === 2) {
-                    monthRef.current?.focus();
-                }
-            };
-
-            const handleMonthChange = (e) => {
-                const value = e.target.value.replace(/\D/g, '').slice(0, 2);
-                setBirthMonth(value);
-                if (value.length === 2) {
-                    dayRef.current?.focus();
-                }
-            };
-
-            const handleDayChange = (e) => {
-                const value = e.target.value.replace(/\D/g, '').slice(0, 2);
-                setBirthDay(value);
-            };
-
             const handleSubmit = () => {
-                if (!mbti || !birthYear || !birthMonth || !birthDay) {
-                    alert('MBTI와 생년월일을 모두 입력해주세요!');
-                    return;
-                }
-
-                const year = parseInt(birthYear);
-                const month = parseInt(birthMonth);
-                const day = parseInt(birthDay);
-
-                if (month < 1 || month > 12) {
-                    alert('월은 01~12 사이로 입력해주세요!');
-                    return;
-                }
-
-                if (day < 1 || day > 31) {
-                    alert('일은 01~31 사이로 입력해주세요!');
+                if (!mbti || !zodiacAnimalSelection) {
+                    // 사용자 정의 메시지 박스 또는 UI 피드백으로 변경
+                    // alert('MBTI 유형과 12지신 띠를 모두 선택해주세요!');
+                    console.error('MBTI 유형과 12지신 띠를 모두 선택해주세요!');
                     return;
                 }
 
@@ -308,25 +264,22 @@
                         month: 'long',
                         day: 'numeric'
                     });
-
-                    // 12지신 계산
-                    const zodiacAnimal = getZodiacAnimal(birthYear);
                     
                     // 오늘의 변화 코드 (0, 1, 2 중 하나)
                     const todayVariation = getTodayVariation();
                     
                     // MBTI 성향과 12지신 조합으로 운세 생성
                     const mbtiTrait = mbtiTraits[mbti];
-                    const personalFortune = zodiacPersonalFortunes[zodiacAnimal][todayVariation];
-                    const safetyAdvice = zodiacSafetyAdvices[zodiacAnimal][todayVariation];
+                    const personalFortune = zodiacPersonalFortunes[zodiacAnimalSelection][todayVariation];
+                    const safetyAdvice = zodiacSafetyAdvices[zodiacAnimalSelection][todayVariation];
                     
-                    const luckyNumbers = generateLuckyNumbers(mbti, birthYear, birthMonth, birthDay);
+                    const luckyNumbers = generateLuckyNumbers(mbti); // 띠 선택으로 변경
 
                     setResult({
                         date: todayDate,
                         mbti,
                         mbtiTrait,
-                        zodiacAnimal,
+                        zodiacAnimal: zodiacAnimalSelection, // 선택된 띠 사용
                         personalFortune,
                         safetyAdvice,
                         luckyNumbers
@@ -339,36 +292,34 @@
             const reset = () => {
                 setResult(null);
                 setMbti('');
-                setBirthYear('');
-                setBirthMonth('');
-                setBirthDay('');
+                setZodiacAnimalSelection(''); // 띠 선택 초기화
                 setLoading(false);
             };
 
             return (
-                <div className="min-h-screen bg-gradient-to-br from-purple-100 via-blue-50 to-indigo-100 p-4">
+                <div className="min-h-screen bg-gradient-to-br from-purple-100 via-blue-50 to-indigo-100 p-4 font-inter">
                     <div className="max-w-md mx-auto">
                         <div className="bg-white rounded-3xl shadow-2xl overflow-hidden">
-                            <div className="bg-gradient-to-r from-purple-600 to-blue-600 text-white p-6 text-center">
+                            <div className="bg-gradient-to-r from-purple-600 to-blue-600 text-white p-4 text-center rounded-t-3xl">
                                 <div className="flex items-center justify-center mb-2">
-                                    <Star className="w-8 h-8 mr-2" />
-                                    <h1 className="text-2xl font-bold">MBTI + 12지신 운세</h1>
-                                    <Star className="w-8 h-8 ml-2" />
+                                    <Star className="w-5 h-5 mr-1" />
+                                    <h1 className="text-xl font-bold">MBTI + 12지신 운세</h1>
+                                    <Star className="w-5 h-5 ml-1" />
                                 </div>
-                                <p className="text-purple-100">MBTI + 12지신 개인운세 & 전기정비 안전운세 & 행운번호</p>
+                                <p className="text-purple-100 text-sm">개인운세 & 안전운세 & 행운번호</p>
                             </div>
 
                             {!result ? (
-                                <div className="p-6 space-y-6">
+                                <div className="p-4 space-y-4">
                                     <div>
                                         <label className="block text-sm font-semibold text-gray-700 mb-2">
-                                            <Heart className="w-4 h-4 inline mr-1" />
+                                            <Heart className="w-3 h-3 inline mr-1" />
                                             MBTI 유형을 선택하세요
                                         </label>
                                         <select
                                             value={mbti}
                                             onChange={(e) => setMbti(e.target.value)}
-                                            className="w-full p-3 border-2 border-purple-200 rounded-xl focus:border-purple-500 focus:outline-none transition-colors"
+                                            className="w-full p-2.5 border-2 border-purple-200 rounded-xl focus:border-purple-500 focus:outline-none transition-colors text-sm"
                                         >
                                             <option value="">MBTI 선택</option>
                                             {mbtiTypes.map(type => (
@@ -379,54 +330,25 @@
 
                                     <div>
                                         <label className="block text-sm font-semibold text-gray-700 mb-2">
-                                            <Calendar className="w-4 h-4 inline mr-1" />
-                                            생년월일을 입력하세요 (년/월/일)
+                                            <Calendar className="w-3 h-3 inline mr-1" />
+                                            자신의 12지신 띠를 선택하세요
                                         </label>
-                                        <div className="flex gap-2 items-center">
-                                            <div className="flex-1">
-                                                <input
-                                                    type="text"
-                                                    value={birthYear}
-                                                    onChange={handleYearChange}
-                                                    placeholder="년 (YY)"
-                                                    maxLength="2"
-                                                    className="w-full p-3 border-2 border-purple-200 rounded-xl focus:border-purple-500 focus:outline-none transition-colors text-center text-lg font-medium"
-                                                />
-                                                <p className="text-xs text-gray-500 text-center mt-1">년</p>
-                                            </div>
-                                            <span className="text-purple-400 font-bold text-xl">/</span>
-                                            <div className="flex-1">
-                                                <input
-                                                    ref={monthRef}
-                                                    type="text"
-                                                    value={birthMonth}
-                                                    onChange={handleMonthChange}
-                                                    placeholder="월 (MM)"
-                                                    maxLength="2"
-                                                    className="w-full p-3 border-2 border-purple-200 rounded-xl focus:border-purple-500 focus:outline-none transition-colors text-center text-lg font-medium"
-                                                />
-                                                <p className="text-xs text-gray-500 text-center mt-1">월</p>
-                                            </div>
-                                            <span className="text-purple-400 font-bold text-xl">/</span>
-                                            <div className="flex-1">
-                                                <input
-                                                    ref={dayRef}
-                                                    type="text"
-                                                    value={birthDay}
-                                                    onChange={handleDayChange}
-                                                    placeholder="일 (DD)"
-                                                    maxLength="2"
-                                                    className="w-full p-3 border-2 border-purple-200 rounded-xl focus:border-purple-500 focus:outline-none transition-colors text-center text-lg font-medium"
-                                                />
-                                                <p className="text-xs text-gray-500 text-center mt-1">일</p>
-                                            </div>
-                                        </div>
+                                        <select
+                                            value={zodiacAnimalSelection}
+                                            onChange={(e) => setZodiacAnimalSelection(e.target.value)}
+                                            className="w-full p-2.5 border-2 border-purple-200 rounded-xl focus:border-purple-500 focus:outline-none transition-colors text-sm"
+                                        >
+                                            <option value="">12지신 띠 선택</option>
+                                            {zodiacAnimals.map(animal => (
+                                                <option key={animal} value={animal}>{animal}띠</option>
+                                            ))}
+                                        </select>
                                     </div>
 
                                     <button
                                         onClick={handleSubmit}
                                         disabled={loading}
-                                        className={`w-full py-3 px-6 rounded-xl font-semibold transition-all duration-200 shadow-lg ${
+                                        className={`w-full py-2.5 px-4 rounded-xl font-semibold transition-all duration-200 shadow-lg text-sm ${
                                             loading
                                                 ? 'bg-gray-400 cursor-not-allowed'
                                                 : 'bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:from-purple-700 hover:to-blue-700 transform hover:scale-105'
@@ -434,70 +356,70 @@
                                     >
                                         {loading ? (
                                             <div className="flex items-center justify-center">
-                                                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                                                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
                                                 MBTI + 12지신 운세 분석 중...
                                             </div>
                                         ) : (
                                             <>
-                                                <Sparkles className="w-5 h-5 inline mr-2" />
+                                                <Sparkles className="w-4 h-4 inline mr-2" />
                                                 MBTI + 12지신 운세 확인하기
                                             </>
                                         )}
                                     </button>
                                 </div>
                             ) : (
-                                <div className="p-6 space-y-6">
+                                <div className="p-4 space-y-4">
                                     <div className="text-center">
-                                        <h2 className="text-lg font-semibold text-gray-800">{result.date}</h2>
-                                        <div className="flex items-center justify-center gap-2 flex-wrap">
-                                            <span className="bg-purple-100 text-purple-700 px-3 py-1 rounded-full text-sm font-medium">
+                                        <h2 className="text-base font-semibold text-gray-800">{result.date}</h2>
+                                        <div className="flex items-center justify-center gap-1.5 flex-wrap mt-2">
+                                            <span className="bg-purple-100 text-purple-700 px-2.5 py-1 rounded-full text-xs font-medium">
                                                 {result.mbtiTrait} {result.mbti}
                                             </span>
-                                            <span className="bg-orange-100 text-orange-700 px-3 py-1 rounded-full text-sm font-medium">
+                                            <span className="bg-orange-100 text-orange-700 px-2.5 py-1 rounded-full text-xs font-medium">
                                                 🐾 {result.zodiacAnimal}띠
                                             </span>
                                         </div>
-                                        <p className="text-gray-600 text-sm mt-2">MBTI + 12지신 맞춤 운세</p>
+                                        <p className="text-gray-600 text-xs mt-2">MBTI + 12지신 맞춤 운세</p>
                                     </div>
 
-                                    <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-4 rounded-xl border-l-4 border-blue-500">
-                                        <div className="flex items-center mb-3">
-                                            <Heart className="w-5 h-5 text-blue-600 mr-2" />
-                                            <h3 className="font-semibold text-blue-800">{result.zodiacAnimal}띠의 개인 운세</h3>
+                                    <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-3 rounded-xl border-l-4 border-blue-500">
+                                        <div className="flex items-center mb-2">
+                                            <Heart className="w-4 h-4 text-blue-600 mr-1.5" />
+                                            <h3 className="font-semibold text-blue-800 text-sm">{result.zodiacAnimal}띠의 개인 운세</h3>
                                         </div>
-                                        <p className="text-blue-700 leading-relaxed text-sm">{result.personalFortune}</p>
+                                        <p className="text-blue-700 leading-relaxed text-xs">{result.personalFortune}</p>
                                     </div>
 
-                                    <div className="bg-gradient-to-r from-green-50 to-emerald-50 p-4 rounded-xl border-l-4 border-green-500">
-                                        <div className="flex items-center mb-3">
-                                            <Shield className="w-5 h-5 text-green-600 mr-2" />
-                                            <h3 className="font-semibold text-green-800">{result.zodiacAnimal}띠의 전기정비 안전 운세</h3>
+                                    <div className="bg-gradient-to-r from-green-50 to-emerald-50 p-3 rounded-xl border-l-4 border-green-500">
+                                        <div className="flex items-center mb-2">
+                                            <Shield className="w-4 h-4 text-green-600 mr-1.5" />
+                                            <h3 className="font-semibold text-green-800 text-sm">{result.zodiacAnimal}띠의 전기정비 안전 운세</h3>
                                         </div>
-                                        <div className="max-h-32 overflow-y-auto">
-                                            <p className="text-green-700 leading-relaxed text-sm">{result.safetyAdvice}</p>
+                                        <div className="max-h-24 overflow-y-auto">
+                                            <p className="text-green-700 leading-relaxed text-xs">{result.safetyAdvice}</p>
                                         </div>
                                     </div>
 
-                                    <div className="bg-gradient-to-r from-yellow-50 to-orange-50 p-4 rounded-xl border-l-4 border-yellow-500">
-                                        <div className="flex items-center mb-3">
-                                            <Star className="w-5 h-5 text-yellow-600 mr-2" />
-                                            <h3 className="font-semibold text-yellow-800">오늘의 행운번호 (1-45)</h3>
+                                    <div className="bg-gradient-to-r from-yellow-50 to-orange-50 p-3 rounded-xl border-l-4 border-yellow-500">
+                                        <div className="flex items-center mb-2">
+                                            <Star className="w-4 h-4 text-yellow-600 mr-1.5" />
+                                            <h3 className="font-semibold text-yellow-800 text-sm">오늘의 행운번호 (1-45)</h3>
                                         </div>
                                         <div className="text-center">
-                                            <div className="flex justify-center gap-2 mb-2">
+                                            <div className="flex justify-center gap-1.5 mb-2">
                                                 {result.luckyNumbers.map((num, index) => (
-                                                    <div key={index} className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-lg border-2 border-yellow-300">
-                                                        <span className="text-lg font-bold text-yellow-700">{num}</span>
+                                                    <div key={index} className="w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-md border border-yellow-300">
+                                                        <span className="text-sm font-bold text-yellow-700">{num}</span>
                                                     </div>
                                                 ))}
                                             </div>
-                                            <p className="text-sm text-yellow-600 mt-2">이 번호들이 행운을 가져다 줄 거예요! ✨</p>
+                                            <p className="text-xs text-yellow-600 mt-1">이 번호들이 행운을 가져다 줄 거예요! ✨</p>
                                         </div>
                                     </div>
 
                                     <button
                                         onClick={reset}
-                                        className="w-full bg-gray-500 text-white py-3 px-6 rounded-xl font-semibold hover:bg-gray-600 transition-colors"
+                                        className="w-full bg-gray-500 text-white py-2.5 px-4 rounded-xl font-semibold hover:bg-gray-600 transition-colors text-sm"
                                     >
                                         다시 확인하기
                                     </button>
@@ -514,7 +436,10 @@
             );
         };
 
-        ReactDOM.render(<MBTIFortuneApp />, document.getElementById('root'));
+        // ReactDOM.render 대신 createRoot 사용
+        const container = document.getElementById('root');
+        const root = ReactDOM.createRoot(container);
+        root.render(<MBTIFortuneApp />);
     </script>
 </body>
 </html>
