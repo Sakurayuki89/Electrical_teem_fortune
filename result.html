@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>제철소 안전 운세 결과</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>⚡ 제철소 전기설비 안전 운세 결과 ⚡</h1>
+            <p>AI가 분석한 당신만의 맞춤 안전 운세입니다</p>
+        </header>
+
+        <div class="fortune-result">
+            <div class="zodiac-info">
+                <h3 id="zodiac-title">운세 분석 중...</h3>
+                <div id="zodiac-content"></div>
+            </div>
+            
+            <div class="safety-advice">
+                <h3>🔧 오늘의 안전 작업 조언</h3>
+                <div id="safety-content"></div>
+            </div>
+            
+            <button onclick="tryLuck()" class="luck-btn">🍀 행운 버튼</button>
+        </div>
+    </div>
+
+    <!-- 행운 당첨 모달 -->
+    <div id="luck-modal" class="modal hidden">
+        <div class="modal-content">
+            <h2>🎉 축하합니다! 🎉</h2>
+            <p>이번 달 행운의 주인공이 되셨습니다!</p>
+            <p>특별한 행운이 함께할 것입니다.</p>
+            <button onclick="closeLuckModal()" class="close-btn">확인</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        // 페이지 로드 시 URL 파라미터에서 데이터 읽어와서 결과 표시
+        window.onload = function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const birthdate = urlParams.get('birthdate');
+            const mbti = urlParams.get('mbti');
+            
+            if (birthdate && mbti) {
+                displayFortuneResult(birthdate, mbti);
+            } else {
+                // 파라미터가 없으면 메인 페이지로 리다이렉트
+                window.location.href = 'index.html';
+            }
+        };
+        
+        function displayFortuneResult(birthdate, mbti) {
+            const zodiac = getZodiac(birthdate);
+            const seed = generateSeed(birthdate, mbti);
+
+            // AI 추론 방식으로 동적 운세 생성
+            const aiFortune = generateAIFortune(zodiac, mbti, seed);
+            const aiSafetyAdvice = generateAISafetyAdvice(zodiac, mbti, seed);
+            const mbtiInfo = mbtiSafetyAdvice[mbti];
+
+            // 추가 무작위 안전 팁 생성
+            const additionalTips = generateAdditionalSafetyTips(zodiac, mbti, seed);
+
+            // 결과 표시
+            document.getElementById('zodiac-title').textContent = `${zodiac}띠 AI 맞춤 안전 운세`;
+            document.getElementById('zodiac-content').innerHTML = `
+                <div style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 15px; border-radius: 10px; margin-bottom: 15px;">
+                    <p><strong>🔮 AI 분석 운세:</strong> ${aiFortune}</p>
+                </div>
+                <p><strong>💡 MBTI 특성 활용법:</strong> ${mbtiInfo.general}</p>
+            `;
+
+            // AI 생성 안전 조언 표시
+            document.getElementById('safety-content').innerHTML = `
+                <div style="margin-bottom: 20px; padding: 15px; background: linear-gradient(135deg, #ff6b6b, #ffa500); color: white; border-radius: 10px;">
+                    <p><strong>🤖 AI 맞춤 안전 조언:</strong></p>
+                    <p>${aiSafetyAdvice}</p>
+                </div>
+                <div style="margin-bottom: 20px; padding: 15px; background: rgba(102, 126, 234, 0.1); border-radius: 8px;">
+                    <p><strong>⚡ 오늘의 전기작업 포인트:</strong></p>
+                    <p>${additionalTips}</p>
+                </div>
+                <div style="padding: 15px; background: rgba(255,255,255,0.7); border-radius: 8px;">
+                    <strong>⚠️ 필수 안전수칙 ⚠️</strong><br>
+                    • 작업 전 ${getRandomElement(electricalSafetyElements.equipment)} 점검<br>
+                    • ${getRandomElement(electricalSafetyElements.procedures)} 후 작업 시작<br>
+                    • ${getRandomElement(electricalSafetyElements.teamwork)} 실시<br>
+                    • ${getRandomElement(electricalSafetyElements.risks)} 위험 상시 주의
+                </div>
+            `;
+        }
+        
+
+    </script>
+</body>
+</html>
