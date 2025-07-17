@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>상품권 수령 안내</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>🎁 상품권 수령 안내 🎁</h1>
+            <p>축하합니다! 당첨되셨습니다</p>
+        </header>
+
+        <div class="prize-info">
+            <div class="winner-info">
+                <h2>🎉 당첨자 정보</h2>
+                <div class="winner-name">
+                    <span id="winner-display"></span> 님
+                </div>
+            </div>
+
+            <div class="prize-details">
+                <h3>🎫 상품 정보</h3>
+                <div class="prize-card">
+                    <div class="prize-icon">🏪</div>
+                    <div class="prize-text">
+                        <strong>CU 편의점 상품권</strong>
+                        <span class="prize-amount">10,000원</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="instructions">
+                <h3>📱 수령 방법</h3>
+                <div class="instruction-card">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <strong>화면 캡쳐</strong>
+                        <p>현재 이 화면을 캡쳐해주세요</p>
+                    </div>
+                </div>
+
+                <div class="instruction-card">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <strong>전송</strong>
+                        <p>캡쳐한 화면을 <span class="highlight">박송훈 계장</span>에게 전송하시면</p>
+                    </div>
+                </div>
+
+                <div class="instruction-card">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <strong>수령</strong>
+                        <p><span class="highlight">CU 만원 상품권 카드</span>를 지급해 드립니다</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="notice">
+                <h4>⚠️ 주의사항</h4>
+                <ul>
+                    <li>반드시 이 화면을 캡쳐하여 전송해주세요</li>
+                    <li>상품권은 박송훈 계장을 통해서만 수령 가능합니다</li>
+                    <li>당첨 확인 후 즉시 지급해드립니다</li>
+                </ul>
+            </div>
+
+            <div class="congratulations">
+                <p>🎊 다시 한번 축하드립니다! 🎊</p>
+                <p>안전한 작업과 함께 행운도 함께하시길 바랍니다!</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 페이지 로드 시 URL 파라미터에서 이름 읽어와서 표시
+        window.onload = function () {
+            const urlParams = new URLSearchParams(window.location.search);
+            const winnerName = urlParams.get('name');
+
+            if (winnerName) {
+                document.getElementById('winner-display').textContent = winnerName;
+            } else {
+                // 파라미터가 없으면 메인 페이지로 리다이렉트
+                window.location.href = 'Index.html';
+            }
+        };
+    </script>
+</body>
+
+</html>
