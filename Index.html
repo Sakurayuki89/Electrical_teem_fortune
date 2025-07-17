@@ -69,7 +69,19 @@
             <h2>🎉 축하합니다! 🎉</h2>
             <p>이번 달 행운의 주인공이 되셨습니다!</p>
             <p>특별한 행운이 함께할 것입니다.</p>
-            <button onclick="closeLuckModal()" class="close-btn">확인</button>
+            <button onclick="showNameInput()" class="close-btn">다음</button>
+        </div>
+    </div>
+
+    <!-- 이름 입력 모달 -->
+    <div id="name-input-modal" class="modal hidden">
+        <div class="modal-content">
+            <h2>🎁 상품권 수령 안내</h2>
+            <p>상품권 수령을 위해 성함을 입력해주세요</p>
+            <div class="form-group" style="margin: 20px 0;">
+                <input type="text" id="winner-name" placeholder="성함을 입력하세요" style="text-align: center; font-size: 1.1em;">
+            </div>
+            <button onclick="showPrizeInfo()" class="close-btn">확인</button>
         </div>
     </div>
 
