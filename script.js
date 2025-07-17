@@ -314,9 +314,9 @@ function tryLuck() {
         return;
     }
 
-    // 1/220 확률 계산
+    // 1/300 확률 계산
     const random = Math.random();
-    const isWinner = random < (1 / 1);
+    const isWinner = random < (1 / 300);
 
     if (isWinner) {
         monthlyWinners.push(new Date().toISOString());
@@ -329,6 +329,32 @@ function tryLuck() {
 
 function closeLuckModal() {
     document.getElementById('luck-modal').classList.add('hidden');
+}
+
+function showNameInput() {
+    document.getElementById('luck-modal').classList.add('hidden');
+    document.getElementById('name-input-modal').classList.remove('hidden');
+    
+    // 이름 입력 필드에 포커스
+    setTimeout(() => {
+        document.getElementById('winner-name').focus();
+    }, 100);
+}
+
+function showPrizeInfo() {
+    const winnerName = document.getElementById('winner-name').value.trim();
+    
+    if (!winnerName) {
+        alert('성함을 입력해주세요.');
+        return;
+    }
+    
+    // 상품권 안내 페이지로 이동
+    const params = new URLSearchParams({
+        name: winnerName
+    });
+    
+    window.location.href = `prize.html?${params.toString()}`;
 }
 
 // 페이지 로드 시 입력 검증 추가
