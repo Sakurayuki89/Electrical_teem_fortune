@@ -316,7 +316,7 @@ function tryLuck() {
 
     // 1/300 확률 계산
     const random = Math.random();
-    const isWinner = random < (1 / 300);
+    const isWinner = random < (1 / 1);
 
     if (isWinner) {
         monthlyWinners.push(new Date().toISOString());
