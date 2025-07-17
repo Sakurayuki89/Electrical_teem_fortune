@@ -216,6 +216,169 @@ header p {
     display: none;
 }
 
+/* 상품권 페이지 스타일 */
+.prize-info {
+    padding: 40px;
+    background: white;
+}
+
+.winner-info {
+    text-align: center;
+    margin-bottom: 30px;
+    padding: 25px;
+    background: linear-gradient(135deg, #ffeaa7, #fab1a0);
+    border-radius: 15px;
+}
+
+.winner-info h2 {
+    color: #2d3436;
+    margin-bottom: 15px;
+    font-size: 1.5em;
+}
+
+.winner-name {
+    font-size: 1.8em;
+    font-weight: bold;
+    color: #d63031;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+}
+
+.prize-details {
+    margin-bottom: 30px;
+}
+
+.prize-details h3 {
+    color: #2d3436;
+    margin-bottom: 15px;
+    font-size: 1.3em;
+}
+
+.prize-card {
+    display: flex;
+    align-items: center;
+    padding: 20px;
+    background: linear-gradient(135deg, #a8e6cf, #88d8c0);
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.prize-icon {
+    font-size: 3em;
+    margin-right: 20px;
+}
+
+.prize-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.prize-text strong {
+    font-size: 1.3em;
+    color: #2d3436;
+    margin-bottom: 5px;
+}
+
+.prize-amount {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #00b894;
+}
+
+.instructions {
+    margin-bottom: 30px;
+}
+
+.instructions h3 {
+    color: #2d3436;
+    margin-bottom: 20px;
+    font-size: 1.3em;
+}
+
+.instruction-card {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 15px;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 10px;
+    border-left: 4px solid #667eea;
+}
+
+.step-number {
+    background: #667eea;
+    color: white;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    margin-right: 15px;
+    flex-shrink: 0;
+}
+
+.step-content strong {
+    display: block;
+    color: #2d3436;
+    margin-bottom: 5px;
+    font-size: 1.1em;
+}
+
+.step-content p {
+    color: #636e72;
+    line-height: 1.5;
+}
+
+.highlight {
+    background: linear-gradient(135deg, #fd79a8, #fdcb6e);
+    color: white;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-weight: bold;
+}
+
+.notice {
+    background: #fff3cd;
+    border: 1px solid #ffeaa7;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 30px;
+}
+
+.notice h4 {
+    color: #856404;
+    margin-bottom: 10px;
+}
+
+.notice ul {
+    color: #856404;
+    padding-left: 20px;
+}
+
+.notice li {
+    margin-bottom: 5px;
+    line-height: 1.4;
+}
+
+.congratulations {
+    text-align: center;
+    padding: 25px;
+    background: linear-gradient(135deg, #fd79a8, #fdcb6e);
+    color: white;
+    border-radius: 12px;
+    font-size: 1.1em;
+    line-height: 1.6;
+}
+
+.congratulations p {
+    margin-bottom: 10px;
+}
+
+.congratulations p:last-child {
+    margin-bottom: 0;
+}
+
 @media (max-width: 600px) {
     .container {
         margin: 10px;
@@ -226,7 +389,28 @@ header p {
     }
     
     .input-section,
-    .fortune-result {
+    .fortune-result,
+    .prize-info {
         padding: 20px;
+    }
+    
+    .prize-card {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .prize-icon {
+        margin-right: 0;
+        margin-bottom: 10px;
+    }
+    
+    .instruction-card {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .step-number {
+        margin-right: 0;
+        margin-bottom: 10px;
     }
 }
